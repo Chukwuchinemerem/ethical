@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{% block title %}Dashboard – AspenOptions{% endblock %}</title>
+  <title>{% block title %}Dashboard – Ethical Finance{% endblock %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{navy:{950:'#020817',900:'#0a1628',800:'#0f2044'},gold:{400:'#fbbf24',500:'#f59e0b'}},fontFamily:{display:['"Cinzel"','serif'],body:['"DM Sans"','sans-serif']}}}}</script>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -53,7 +53,7 @@
     <div class="p-5 border-b flex-shrink-0" style="border-color:rgba(255,255,255,.06);">
       <a href="{% url 'home' %}" class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#b7791f,#f59e0b);"><i class="fas fa-chart-line text-white text-xs"></i></div>
-        <span class="font-display font-bold text-white">Aspen<span style="color:#f59e0b;">Options</span></span>
+        <span class="font-display font-bold text-white">Ethical<span style="color:#f59e0b;">Finance</span></span>
       </a>
     </div>
     <!-- User card -->
@@ -102,9 +102,7 @@
     </nav>
     <!-- Bottom -->
     <div class="p-3 border-t flex-shrink-0" style="border-color:rgba(255,255,255,.05);">
-      <a href="https://wa.me/2349121304245" target="_blank" class="sidebar-link" style="color:#4ade80;">
-        <i class="fab fa-whatsapp"></i>Live Support
-      </a>
+     
       <a href="{% url 'signout' %}" class="sidebar-link" style="color:#f87171;">
         <i class="fas fa-sign-out-alt"></i>Logout
       </a>
@@ -137,12 +135,7 @@
   </div>
 </div>
 
-<!-- WhatsApp FAB -->
-<a href="https://wa.me/2349121304245" target="_blank"
-  class="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all"
-  style="background:linear-gradient(135deg,#25d366,#128c7e);box-shadow:0 4px 20px rgba(37,211,102,.5);">
-  <i class="fab fa-whatsapp text-xl text-white"></i>
-</a>
+
 
 <!-- Live notification container -->
 <div id="live-notif" class="fixed top-6 right-6 z-[9999] hidden"></div>

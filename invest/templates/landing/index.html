@@ -118,7 +118,7 @@
       <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#1e3a8a,#2563eb);">
         <i class="fas fa-chart-line text-white text-xs"></i>
       </div>
-      <span class="font-display font-bold text-lg" style="color:#1e3a8a;">Ethical<span style="color:#2563eb;">Finance</span></span>
+      <span class="font-display font-bold text-lg" style="color:#1e3a8a;"><span style="color:#2563eb;"></span></span>
     </a>
     <button onclick="toggleMobileMenu()" class="p-2 rounded-xl bg-gray-100">
       <i class="fas fa-times text-gray-700 text-lg"></i>
@@ -573,7 +573,7 @@
         </div>
         <p class="text-gray-400 text-sm leading-relaxed mb-5">A premium investment platform powered by AI and blockchain technology. Serving clients across 80 countries.</p>
         <div class="flex gap-3">
-          <a href="https://wa.me/2349121304245" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-110" style="background:rgba(255,255,255,.08);"><i class="fab fa-whatsapp text-green-400 text-sm"></i></a>
+      
           <a href="#" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-110" style="background:rgba(255,255,255,.08);"><i class="fab fa-telegram text-blue-400 text-sm"></i></a>
           <a href="#" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-110" style="background:rgba(255,255,255,.08);"><i class="fab fa-twitter text-sky-400 text-sm"></i></a>
         </div>
@@ -642,24 +642,9 @@
   </div>
 </div>
 
-<!-- WhatsApp FAB -->
-<a href="https://wa.me/2349121304245" target="_blank"
-  class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110"
-  style="background:linear-gradient(135deg,#25d366,#128c7e);box-shadow:0 4px 20px rgba(37,211,102,.5);">
-  <i class="fab fa-whatsapp text-2xl text-white"></i>
-</a>
 
-<!-- Google Translate -->
-<div id="google_translate_element" style="position:fixed;top:75px;right:10px;z-index:9998;background:white;padding:4px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.1);"></div>
-<script>function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'en,es,pt,ar,fr,de,ru,zh-CN,ja,hi,it,tr,ko'},'google_translate_element');}</script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 
-<!-- Smartsupp -->
-<script type="text/javascript">
-var _smartsupp = _smartsupp || {};
-_smartsupp.key = '8b781d786bde4caaa06afbea717728605331bea4';
-window.smartsupp||(function(d){var s,c,o=smartsupp=function(){o._.push(arguments)};o._=[];s=d.getElementsByTagName('script')[0];c=d.createElement('script');c.type='text/javascript';c.charset='utf-8';c.async=true;c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);})(document);
-</script>
+
 
 <script>
 // ── NAVBAR scroll effect ──────────────────────────────
@@ -726,4 +711,8 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   a.addEventListener('click', function(e){
     var target = document.querySelector(this.getAttribute('href'));
     if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth'});}
-  }
+  });
+});
+</script>
+</body>
+</html>
