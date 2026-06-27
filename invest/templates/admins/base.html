@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Admin – AspenOptions{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{navy:{950:'#020817',900:'#0a1628'},gold:{400:'#fbbf24',500:'#f59e0b'}},fontFamily:{display:['"Cinzel"','serif'],body:['"DM Sans"','sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body{font-family:'DM Sans',sans-serif;background:#020817;color:#e2e8f0;}
+    .font-display,h1,h2{font-family:'Cinzel',serif;}
+    .glass{background:rgba(255,255,255,.04);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);}
+    .btn-gold{background:linear-gradient(135deg,#b7791f,#f59e0b,#fbbf24);color:#020817;font-weight:700;transition:all .3s;}
+    .btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(251,191,36,.4);}
+    .btn-green{background:linear-gradient(135deg,#15803d,#16a34a);color:#fff;font-weight:700;transition:all .3s;}
+    .btn-green:hover{transform:translateY(-1px);}
+    .btn-red{background:linear-gradient(135deg,#b91c1c,#dc2626);color:#fff;font-weight:700;transition:all .3s;}
+    .btn-red:hover{transform:translateY(-1px);}
+    .admin-link{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:10px;font-size:13px;font-weight:500;color:#94a3b8;transition:all .2s;text-decoration:none;}
+    .admin-link:hover{background:rgba(251,191,36,.1);color:#fbbf24;}
+    .admin-link.active{background:rgba(251,191,36,.15);color:#fbbf24;border-left:3px solid #f59e0b;padding-left:10px;}
+    .admin-link i{width:16px;text-align:center;}
+    .badge-pending,.badge-PENDING{background:rgba(245,158,11,.15);color:#fbbf24;border:1px solid rgba(245,158,11,.25);}
+    .badge-approved,.badge-APPROVED{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.25);}
+    .badge-rejected,.badge-REJECTED{background:rgba(220,38,38,.15);color:#f87171;border:1px solid rgba(220,38,38,.25);}
+    .badge-active{background:rgba(56,189,248,.15);color:#38bdf8;border:1px solid rgba(56,189,248,.25);}
+    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:rgba(251,191,36,.3);}
+  </style>
+</head>
+<body class="antialiased">
+
+{% if messages %}
+<div class="fixed top-4 right-4 z-[999] space-y-2 max-w-sm w-full" id="admin-toasts">
+  {% for msg in messages %}
+  <div class="flex items-start gap-3 p-4 rounded-2xl shadow-2xl border"
+    style="background:#0a1628;border-color:{% if msg.tags == 'success' %}rgba(34,197,94,.4){% elif msg.tags == 'error' %}rgba(220,38,38,.4){% else %}rgba(245,158,11,.4){% endif %}">
+    <i class="fas {% if msg.tags == 'success' %}fa-check-circle text-green-400{% elif msg.tags == 'error' %}fa-times-circle text-red-400{% else %}fa-info-circle text-yellow-400{% endif %} mt-0.5 flex-shrink-0"></i>
+    <span class="text-slate-200 text-sm flex-1">{{ msg }}</span>
+    <button onclick="this.closest('div').remove()" class="text-slate-500 hover:text-white"><i class="fas fa-times text-xs"></i></button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="flex h-screen overflow-hidden">
+
+  <!-- SIDEBAR -->
+  <aside id="adm-sb" class="w-60 flex-shrink-0 flex flex-col fixed inset-y-0 left-0 z-40 lg:static transition-transform duration-300 -translate-x-full lg:translate-x-0"
+    style="background:rgba(5,12,28,.99);border-right:1px solid rgba(251,191,36,.12);">
+    <div class="p-4 border-b flex-shrink-0" style="border-color:rgba(255,255,255,.05);">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#b7791f,#f59e0b);">
+          <i class="fas fa-shield-alt text-white text-xs"></i>
+        </div>
+        <span class="font-display font-bold text-white text-sm">Admin Panel</span>
+      </div>
+      <div class="text-slate-600 text-xs mt-0.5">{{ user.username }}</div>
+    </div>
+
+    <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
+      <p class="text-slate-600 text-xs uppercase tracking-widest px-2 py-2 font-medium">Management</p>
+      <a href="{% url 'admin_dashboard' %}" class="admin-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+        <i class="fas fa-tachometer-alt"></i>Overview
+      </a>
+      <a href="{% url 'admin_users' %}" class="admin-link {% if request.resolver_match.url_name == 'admin_users' %}active{% endif %}">
+        <i class="fas fa-users"></i>Users
+      </a>
+      <a href="{% url 'add_funds' %}" class="admin-link {% if request.resolver_match.url_name == 'add_funds' %}active{% endif %}" style="color:#4ade80;">
+        <i class="fas fa-plus-circle"></i>Add Funds
+      </a>
+      <a href="{% url 'admin_deposits' %}" class="admin-link {% if request.resolver_match.url_name == 'admin_deposits' %}active{% endif %}">
+        <i class="fas fa-arrow-down"></i>Deposits
+      </a>
+      <a href="{% url 'admin_withdrawals' %}" class="admin-link {% if request.resolver_match.url_name == 'admin_withdrawals' %}active{% endif %}">
+        <i class="fas fa-arrow-up"></i>Withdrawals
+      </a>
+      <a href="{% url 'admin_investments' %}" class="admin-link {% if request.resolver_match.url_name == 'admin_investments' %}active{% endif %}">
+        <i class="fas fa-chart-line"></i>Investments
+      </a>
+
+      <p class="text-slate-600 text-xs uppercase tracking-widest px-2 py-2 font-medium mt-2">Configuration</p>
+      <a href="{% url 'admin_plans' %}" class="admin-link {% if request.resolver_match.url_name == 'admin_plans' %}active{% endif %}" style="color:#a78bfa;">
+        <i class="fas fa-layer-group"></i>Investment Plans
+      </a>
+      <a href="{% url 'admin_settings' %}" class="admin-link {% if request.resolver_match.url_name == 'admin_settings' %}active{% endif %}" style="color:#fbbf24;">
+        <i class="fas fa-wallet"></i>Wallet Settings
+      </a>
+    </nav>
+
+    <div class="p-3 border-t flex-shrink-0" style="border-color:rgba(255,255,255,.05);">
+      <a href="{% url 'home' %}" class="admin-link"><i class="fas fa-home"></i>View Site</a>
+      <a href="{% url 'dashboard' %}" class="admin-link"><i class="fas fa-user"></i>My Dashboard</a>
+      <a href="{% url 'signout' %}" class="admin-link" style="color:#f87171;"><i class="fas fa-sign-out-alt"></i>Logout</a>
+    </div>
+  </aside>
+
+  <div id="adm-ov" class="fixed inset-0 bg-black/60 z-30 hidden lg:hidden" onclick="closeAdmSB()"></div>
+
+  <div class="flex-1 flex flex-col overflow-hidden min-w-0">
+    <header class="flex items-center gap-4 px-4 sm:px-6 py-4 flex-shrink-0"
+      style="background:rgba(5,12,28,.95);border-bottom:1px solid rgba(251,191,36,.1);">
+      <button onclick="toggleAdmSB()" class="lg:hidden text-slate-400 hover:text-yellow-400" aria-label="Menu">
+        <i class="fas fa-bars text-lg"></i>
+      </button>
+      <h1 class="font-display font-bold text-white text-sm">{% block page_title %}Admin{% endblock %}</h1>
+      <div class="ml-auto flex items-center gap-2">
+        <a href="{% url 'admin_plans' %}" class="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all" style="background:rgba(167,139,250,.15);color:#a78bfa;border:1px solid rgba(167,139,250,.3);">
+          <i class="fas fa-layer-group"></i> Plans
+        </a>
+        <a href="{% url 'add_funds' %}" class="btn-green px-3 py-1.5 rounded-lg text-xs hidden sm:flex items-center gap-1">
+          <i class="fas fa-plus"></i>Add Funds
+        </a>
+        <a href="{% url 'signout' %}" class="text-slate-500 hover:text-yellow-400 p-2" title="Logout">
+          <i class="fas fa-sign-out-alt text-sm"></i>
+        </a>
+      </div>
+    </header>
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6">{% block content %}{% endblock %}</main>
+  </div>
+</div>
+
+<script>
+function toggleAdmSB(){document.getElementById('adm-sb').classList.toggle('-translate-x-full');document.getElementById('adm-ov').classList.toggle('hidden');}
+function closeAdmSB(){document.getElementById('adm-sb').classList.add('-translate-x-full');document.getElementById('adm-ov').classList.add('hidden');}
+document.addEventListener('DOMContentLoaded',function(){
+  if(window.innerWidth<1024){document.querySelectorAll('.admin-link').forEach(function(l){l.addEventListener('click',closeAdmSB);});}
+});
+setTimeout(function(){document.querySelectorAll('#admin-toasts>div').forEach(function(t){t.style.opacity=0;t.style.transition='opacity .4s';setTimeout(function(){t.remove();},400);});},6000);
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

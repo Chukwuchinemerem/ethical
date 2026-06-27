@@ -1,0 +1,154 @@
+{% extends 'invest/base.html' %}
+{% block title %}Transaction History – AspenOptions{% endblock %}
+{% block page_title %}Transaction History{% endblock %}
+{% block content %}
+
+<!-- Tab nav -->
+<div class="flex gap-1 mb-6 p-1 rounded-2xl w-fit" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);">
+  <button onclick="showTab('dep')" id="tab-dep"
+    class="px-4 sm:px-5 py-2 rounded-xl text-sm font-semibold transition-all"
+    style="background:rgba(251,191,36,.2);color:#fbbf24;">
+    Deposits
+  </button>
+  <button onclick="showTab('wd')" id="tab-wd"
+    class="px-4 sm:px-5 py-2 rounded-xl text-sm font-semibold transition-all text-slate-400">
+    Withdrawals
+  </button>
+  <button onclick="showTab('txn')" id="tab-txn"
+    class="px-4 sm:px-5 py-2 rounded-xl text-sm font-semibold transition-all text-slate-400">
+    All Txns
+  </button>
+</div>
+
+<!-- Deposits tab -->
+<div id="tab-dep-c">
+  {% if deposit_requests %}
+  <div class="glass rounded-2xl overflow-hidden border border-white/5">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.06);">
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Date</th>
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden sm:table-cell">Crypto</th>
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden sm:table-cell">Plan</th>
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Amount</th>
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden md:table-cell">TxID</th>
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in deposit_requests %}
+          <tr style="border-bottom:1px solid rgba(255,255,255,.03);" class="hover:bg-white/[.02] transition-colors">
+            <td class="p-4 text-slate-300 text-sm">{{ d.created_at|date:"M d, Y" }}</td>
+            <td class="p-4 text-white font-semibold hidden sm:table-cell">{{ d.cryptocurrency.symbol }}</td>
+            <td class="p-4 hidden sm:table-cell">
+              <span class="text-xs px-2 py-0.5 rounded-full" style="background:rgba(251,191,36,.15);color:#fbbf24;">{{ d.investment_tier.name }}</span>
+            </td>
+            <td class="p-4 text-white font-bold">${{ d.amount|floatformat:2 }}</td>
+            <td class="p-4 text-slate-500 font-mono text-xs hidden md:table-cell">{{ d.transaction_id|truncatechars:22 }}</td>
+            <td class="p-4"><span class="badge-{{ d.status }} text-xs px-2.5 py-1 rounded-full font-semibold">{{ d.status|title }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="glass rounded-2xl p-12 text-center text-slate-500 border border-white/5">No deposits yet.</div>
+  {% endif %}
+</div>
+
+<!-- Withdrawals tab -->
+<div id="tab-wd-c" class="hidden">
+  {% if withdrawal_requests %}
+  <div class="glass rounded-2xl overflow-hidden border border-white/5">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.06);">
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Date</th>
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden sm:table-cell">Crypto</th>
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Amount</th>
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden md:table-cell">Wallet</th>
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for w in withdrawal_requests %}
+          <tr style="border-bottom:1px solid rgba(255,255,255,.03);" class="hover:bg-white/[.02] transition-colors">
+            <td class="p-4 text-slate-300 text-sm">{{ w.created_at|date:"M d, Y" }}</td>
+            <td class="p-4 text-white font-semibold hidden sm:table-cell">{{ w.cryptocurrency.symbol }}</td>
+            <td class="p-4 text-white font-bold">${{ w.amount|floatformat:2 }}</td>
+            <td class="p-4 text-slate-500 font-mono text-xs hidden md:table-cell">{{ w.wallet_address|truncatechars:22 }}</td>
+            <td class="p-4"><span class="badge-{{ w.status }} text-xs px-2.5 py-1 rounded-full font-semibold">{{ w.status|title }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="glass rounded-2xl p-12 text-center text-slate-500 border border-white/5">No withdrawals yet.</div>
+  {% endif %}
+</div>
+
+<!-- All transactions tab -->
+<div id="tab-txn-c" class="hidden">
+  {% if transactions %}
+  <div class="glass rounded-2xl overflow-hidden border border-white/5">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.06);">
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Type</th>
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Amount</th>
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden sm:table-cell">Date</th>
+            <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in transactions %}
+          <tr style="border-bottom:1px solid rgba(255,255,255,.03);" class="hover:bg-white/[.02] transition-colors">
+            <td class="p-4">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style="background:rgba(255,255,255,.05);">
+                  <i class="fas {% if t.transaction_type == 'DEPOSIT' %}fa-arrow-down text-sky-400{% elif t.transaction_type == 'WITHDRAWAL' %}fa-arrow-up text-red-400{% elif t.transaction_type == 'PROFIT' %}fa-coins text-green-400{% else %}fa-link text-yellow-400{% endif %} text-xs"></i>
+                </div>
+                <span class="text-white text-sm">{{ t.get_transaction_type_display }}</span>
+              </div>
+            </td>
+            <td class="p-4 font-bold {% if t.transaction_type == 'WITHDRAWAL' %}text-red-400{% else %}text-green-400{% endif %}">
+              {% if t.transaction_type == 'WITHDRAWAL' %}-{% else %}+{% endif %}${{ t.amount|floatformat:2 }}
+            </td>
+            <td class="p-4 text-slate-400 text-sm hidden sm:table-cell">{{ t.created_at|date:"M d, Y" }}</td>
+            <td class="p-4"><span class="badge-{{ t.status }} text-xs px-2.5 py-1 rounded-full font-semibold">{{ t.get_status_display }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="glass rounded-2xl p-12 text-center text-slate-500 border border-white/5">No transactions yet.</div>
+  {% endif %}
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script>
+function showTab(t){
+  ['dep','wd','txn'].forEach(function(x){
+    document.getElementById('tab-'+x+'-c').classList.toggle('hidden', x !== t);
+    var btn = document.getElementById('tab-'+x);
+    if(x === t){
+      btn.style.background = 'rgba(251,191,36,.2)';
+      btn.style.color = '#fbbf24';
+    } else {
+      btn.style.background = '';
+      btn.style.color = '#94a3b8';
+    }
+  });
+}
+</script>
+{% endblock %}

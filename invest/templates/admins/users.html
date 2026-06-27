@@ -1,0 +1,65 @@
+{% extends 'admins/base.html' %}
+{% block title %}Users – Admin | AspenOptions{% endblock %}
+{% block page_title %}All Users ({{ total_users }}){% endblock %}
+{% block content %}
+<div class="glass rounded-2xl overflow-hidden border border-white/5">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.06);">
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">User</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden sm:table-cell">Email</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Balance</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden md:table-cell">Deposited</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden lg:table-cell">Profits</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden md:table-cell">Joined</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr style="border-bottom:1px solid rgba(255,255,255,.03);" class="hover:bg-white/[.02] transition-colors">
+          <td class="p-4">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+                style="background:linear-gradient(135deg,#b7791f,#f59e0b);">
+                {{ u.first_name|first|upper }}{{ u.last_name|first|upper }}
+              </div>
+              <div>
+                <div class="text-white text-sm font-medium">{{ u.get_full_name|default:u.username }}</div>
+                <div class="text-slate-500 text-xs">@{{ u.username }}</div>
+              </div>
+            </div>
+          </td>
+          <td class="p-4 text-slate-300 text-sm hidden sm:table-cell">{{ u.email }}</td>
+          <td class="p-4 text-yellow-400 font-bold text-sm">${{ u.current_balance|floatformat:2 }}</td>
+          <td class="p-4 text-sky-400 text-sm hidden md:table-cell">${{ u.current_total_deposited|floatformat:2 }}</td>
+          <td class="p-4 text-green-400 text-sm hidden lg:table-cell">${{ u.current_total_profit|floatformat:2 }}</td>
+          <td class="p-4 text-slate-400 text-sm hidden md:table-cell">{{ u.date_joined|date:"M d, Y" }}</td>
+          <td class="p-4">
+            <div class="flex gap-2 flex-wrap">
+              <a href="{% url 'add_funds' %}?user={{ u.id }}"
+                class="btn-green px-3 py-1.5 rounded-lg text-xs">
+                <i class="fas fa-plus mr-1"></i>Funds
+              </a>
+              <form method="post" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{ u.id }}">
+                <button name="action" value="delete"
+                  class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+                  style="background:rgba(220,38,38,.15);color:#f87171;border:1px solid rgba(220,38,38,.3);"
+                  onclick="return confirm('Delete {{ u.username }}? This cannot be undone.')">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="p-8 text-center text-slate-500">No users found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

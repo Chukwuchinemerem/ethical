@@ -1,0 +1,729 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Ethical Finance – Premium investment platform powered by AI and blockchain technology. Trade Forex, Crypto, Oil & Gas with expert precision."/>
+  <title>Ethical Finance | Trading Made Easy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',600:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#1e3050'},gold:'#f59e0b'},fontFamily:{display:['"Plus Jakarta Sans"','sans-serif'],body:['"Inter"','sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter',sans-serif;background:#fff;color:#0f172a;overflow-x:hidden;}
+    h1,h2,h3,h4,.font-display{font-family:'Plus Jakarta Sans',sans-serif;}
+
+    /* ── NAVBAR ── */
+    #navbar{position:fixed;top:0;left:0;right:0;z-index:1000;transition:all .3s;}
+    #navbar.scrolled{background:rgba(255,255,255,.97);backdrop-filter:blur(20px);box-shadow:0 1px 30px rgba(0,0,0,.08);}
+    .nav-link{font-size:14px;font-weight:500;color:#374151;transition:color .2s;text-decoration:none;}
+    .nav-link:hover{color:#2563eb;}
+
+    /* ── HERO SLIDER ── */
+    .hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1s ease;}
+    .hero-slide.active{opacity:1;}
+    .slide-overlay{position:absolute;inset:0;background:linear-gradient(110deg,rgba(10,25,60,.82) 0%,rgba(10,25,60,.45) 55%,rgba(10,25,60,.15) 100%);}
+
+    /* ── SECTION STYLES ── */
+    .section-label{display:inline-flex;align-items:center;gap:8px;background:#eff6ff;color:#2563eb;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border-radius:100px;margin-bottom:16px;}
+    .section-title{font-size:clamp(1.75rem,3.5vw,2.75rem);font-weight:800;color:#0f172a;line-height:1.2;}
+    .section-sub{font-size:16px;color:#64748b;line-height:1.7;max-width:560px;}
+    .card-hover{transition:all .3s;border:1px solid #e2e8f0;}
+    .card-hover:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(37,99,235,.12);border-color:#bfdbfe;}
+
+    /* ── SERVICE CARDS ── */
+    .svc-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:22px;}
+
+    /* ── STATS ── */
+    .stat-num{font-size:clamp(2rem,4vw,3rem);font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(135deg,#1e3a8a,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+    /* ── PLAN CARDS ── */
+    .plan-card{background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:28px;position:relative;transition:all .35s;}
+    .plan-card:hover{border-color:#2563eb;box-shadow:0 20px 50px rgba(37,99,235,.13);transform:translateY(-6px);}
+    .plan-card.featured{background:linear-gradient(145deg,#1e3a8a,#2563eb);color:#fff;border-color:transparent;}
+    .plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#1e3a8a;font-size:11px;font-weight:700;padding:4px 14px;border-radius:100px;white-space:nowrap;}
+
+    /* ── TESTIMONIAL ── */
+    .testimonial-card{background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:28px;}
+
+    /* ── LIVE ACTIVITY POPUP ── */
+    #live-activity-popup{position:fixed;bottom:100px;left:24px;z-index:9999;display:none;animation:slideUp .4s ease;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+    /* ── MOBILE MENU ── */
+    #mobile-menu{display:none;position:fixed;inset:0;z-index:999;background:rgba(255,255,255,.98);backdrop-filter:blur(10px);}
+    #mobile-menu.open{display:flex;flex-direction:column;}
+
+    /* ── FOOTER ── */
+    .footer-link{color:#94a3b8;font-size:14px;text-decoration:none;transition:color .2s;}
+    .footer-link:hover{color:#fff;}
+
+    /* ── SCROLL BAR ── */
+    ::-webkit-scrollbar{width:5px;}
+    ::-webkit-scrollbar-thumb{background:#2563eb;border-radius:3px;}
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════════ -->
+<nav id="navbar" class="py-4">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="{% url 'home' %}" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#1e3a8a,#2563eb);">
+        <i class="fas fa-chart-line text-white text-sm"></i>
+      </div>
+      <span class="font-display font-bold text-xl" style="color:#1e3a8a;">Ethical<span style="color:#2563eb;">Finance</span></span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <div class="hidden lg:flex items-center gap-7">
+      <a href="{% url 'home' %}" class="nav-link" style="color:#2563eb;font-weight:600;">Home</a>
+      <a href="{% url 'about' %}" class="nav-link">About Us</a>
+      <a href="{% url 'packages' %}" class="nav-link">Investment Plans</a>
+      <a href="{% url 'faq' %}" class="nav-link">FAQ</a>
+      <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="hidden lg:flex items-center gap-3">
+      <a href="{% url 'signin' %}"
+        class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all"
+        style="color:#2563eb;border:1.5px solid #2563eb;">
+        Sign In
+      </a>
+      <a href="{% url 'signup' %}"
+        class="px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all"
+        style="background:linear-gradient(135deg,#1e3a8a,#2563eb);box-shadow:0 4px 15px rgba(37,99,235,.3);">
+        Get Started
+      </a>
+    </div>
+
+    <!-- Hamburger -->
+    <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors" aria-label="Menu">
+      <i class="fas fa-bars text-gray-700 text-xl" id="ham-icon"></i>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu">
+  <div class="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
+    <a href="{% url 'home' %}" class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#1e3a8a,#2563eb);">
+        <i class="fas fa-chart-line text-white text-xs"></i>
+      </div>
+      <span class="font-display font-bold text-lg" style="color:#1e3a8a;">Ethical<span style="color:#2563eb;">Finance</span></span>
+    </a>
+    <button onclick="toggleMobileMenu()" class="p-2 rounded-xl bg-gray-100">
+      <i class="fas fa-times text-gray-700 text-lg"></i>
+    </button>
+  </div>
+  <nav class="flex-1 flex flex-col px-6 pt-6 gap-1">
+    <a href="{% url 'home' %}" class="flex items-center gap-3 px-4 py-3.5 rounded-xl font-semibold text-blue-700 bg-blue-50">
+      <i class="fas fa-home w-5 text-center text-blue-600"></i>Home
+    </a>
+    <a href="{% url 'about' %}" class="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-gray-700 hover:bg-gray-50">
+      <i class="fas fa-info-circle w-5 text-center text-gray-400"></i>About Us
+    </a>
+    <a href="{% url 'packages' %}" class="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-gray-700 hover:bg-gray-50">
+      <i class="fas fa-layer-group w-5 text-center text-gray-400"></i>Investment Plans
+    </a>
+    <a href="{% url 'faq' %}" class="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-gray-700 hover:bg-gray-50">
+      <i class="fas fa-question-circle w-5 text-center text-gray-400"></i>FAQ
+    </a>
+    <a href="{% url 'contact' %}" class="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-gray-700 hover:bg-gray-50">
+      <i class="fas fa-envelope w-5 text-center text-gray-400"></i>Contact
+    </a>
+  </nav>
+  <div class="px-6 pb-8 flex flex-col gap-3">
+    <a href="{% url 'signin' %}" class="w-full py-3.5 rounded-xl font-semibold text-center text-blue-700 border-2 border-blue-700">Sign In</a>
+    <a href="{% url 'signup' %}" class="w-full py-3.5 rounded-xl font-semibold text-center text-white" style="background:linear-gradient(135deg,#1e3a8a,#2563eb);">Get Started</a>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     HERO SLIDER – 3 Slides (City Skyscrapers)
+════════════════════════════════════════════ -->
+<section id="hero" class="relative h-screen min-h-[600px] overflow-hidden">
+
+  <!-- Slide 1 – City skyline night -->
+  <div class="hero-slide active" style="background:url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1800&q=80') center/cover no-repeat;"></div>
+  <!-- Slide 2 – Glass skyscrapers -->
+  <div class="hero-slide" style="background:url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1800&q=80') center/cover no-repeat;"></div>
+  <!-- Slide 3 – Financial district sunrise -->
+  <div class="hero-slide" style="background:url('https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=1800&q=80') center/cover no-repeat;"></div>
+
+  <!-- Overlay -->
+  <div class="slide-overlay absolute inset-0 z-10"></div>
+
+  <!-- Content -->
+  <div class="absolute inset-0 z-20 flex items-center">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 w-full">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center gap-2 mb-5 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase"
+          style="background:rgba(255,255,255,.12);color:#93c5fd;border:1px solid rgba(255,255,255,.2);">
+          <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+          Trusted by 9,000+ Investors Worldwide
+        </div>
+        <h1 class="text-white font-display font-extrabold mb-5 leading-tight" style="font-size:clamp(2.2rem,5.5vw,4rem);">
+          <span id="hero-title-line1">Sustainable Investing</span><br>
+          <span class="block" style="color:#60a5fa;">Designed For You</span>
+        </h1>
+        <p class="text-blue-100 mb-8 leading-relaxed" style="font-size:clamp(15px,2vw,18px);opacity:.9;" id="hero-subtitle">
+          We help people, businesses and institutions build, preserve and manage wealth so they can pursue their financial goals. At Ethical Finance, clients always come first.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a href="{% url 'signup' %}"
+            class="px-7 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:scale-105"
+            style="background:linear-gradient(135deg,#1d4ed8,#2563eb);box-shadow:0 6px 25px rgba(37,99,235,.45);">
+            <i class="fas fa-rocket mr-2"></i>Start Investing
+          </a>
+          <a href="{% url 'packages' %}"
+            class="px-7 py-3.5 rounded-xl font-bold text-sm transition-all hover:scale-105"
+            style="background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.3);backdrop-filter:blur(8px);">
+            View Plans <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+        <!-- Mini stats strip -->
+        <div class="flex flex-wrap gap-6 mt-10">
+          <div class="flex items-center gap-2 text-white">
+            <i class="fas fa-shield-alt text-green-400"></i>
+            <span class="text-sm font-medium">SSL Secured</span>
+          </div>
+          <div class="flex items-center gap-2 text-white">
+            <i class="fas fa-clock text-yellow-400"></i>
+            <span class="text-sm font-medium">24/7 Withdrawals</span>
+          </div>
+          <div class="flex items-center gap-2 text-white">
+            <i class="fas fa-globe text-blue-300"></i>
+            <span class="text-sm font-medium">80 Countries</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slider controls -->
+  <button onclick="prevSlide()" aria-label="Previous"
+    class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-110"
+    style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(8px);">
+    <i class="fas fa-chevron-left text-white text-sm"></i>
+  </button>
+  <button onclick="nextSlide()" aria-label="Next"
+    class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-110"
+    style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(8px);">
+    <i class="fas fa-chevron-right text-white text-sm"></i>
+  </button>
+
+  <!-- Slide dots -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-2.5" id="slide-dots">
+    <button onclick="goSlide(0)" class="slide-dot w-8 h-2 rounded-full transition-all" style="background:rgba(255,255,255,.9);"></button>
+    <button onclick="goSlide(1)" class="slide-dot w-2 h-2 rounded-full transition-all" style="background:rgba(255,255,255,.35);"></button>
+    <button onclick="goSlide(2)" class="slide-dot w-2 h-2 rounded-full transition-all" style="background:rgba(255,255,255,.35);"></button>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     STATS BAND
+════════════════════════════════════════════ -->
+<section class="py-14 bg-white border-b border-gray-100">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div>
+        <div class="stat-num">9K+</div>
+        <div class="text-gray-500 text-sm font-medium mt-1">Individual Benefactors</div>
+      </div>
+      <div>
+        <div class="stat-num">1.2K+</div>
+        <div class="text-gray-500 text-sm font-medium mt-1">Staff Worldwide</div>
+      </div>
+      <div>
+        <div class="stat-num">$77M+</div>
+        <div class="text-gray-500 text-sm font-medium mt-1">Committed Funds</div>
+      </div>
+      <div>
+        <div class="stat-num">80</div>
+        <div class="text-gray-500 text-sm font-medium mt-1">Supported Countries</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     SERVICES
+════════════════════════════════════════════ -->
+<section id="services" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-14">
+      <div class="section-label mx-auto"><i class="fas fa-bolt"></i>What We Offer</div>
+      <h2 class="section-title">Our Investment Services</h2>
+      <p class="section-sub mx-auto mt-3">Join Ethical Finance today and benefit from our cutting-edge trading technology across multiple asset classes.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {% with services=services_list %}
+      <div class="card-hover bg-white rounded-2xl p-6">
+        <div class="svc-icon" style="background:#eff6ff;color:#2563eb;"><i class="fas fa-chart-bar"></i></div>
+        <h3 class="font-display font-bold text-lg text-gray-900 mb-2">Forex Trading</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Our AI-powered forex platform trades with precision, speed and safety — delivering 99.99% ROI without delay.</p>
+      </div>
+      <div class="card-hover bg-white rounded-2xl p-6">
+        <div class="svc-icon" style="background:#f0fdf4;color:#16a34a;"><i class="fas fa-seedling"></i></div>
+        <h3 class="font-display font-bold text-lg text-gray-900 mb-2">Agriculture</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Farmland investments with a long history of strong returns and low correlation with other asset classes.</p>
+      </div>
+      <div class="card-hover bg-white rounded-2xl p-6">
+        <div class="svc-icon" style="background:#fff7ed;color:#ea580c;"><i class="fas fa-oil-well"></i></div>
+        <h3 class="font-display font-bold text-lg text-gray-900 mb-2">Oil & Gas</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Acquiring and developing conventional and unconventional resources in Eagle Ford, SCOOP/STACK, and Bakken plays.</p>
+      </div>
+      <div class="card-hover bg-white rounded-2xl p-6">
+        <div class="svc-icon" style="background:#faf5ff;color:#9333ea;"><i class="fab fa-bitcoin"></i></div>
+        <h3 class="font-display font-bold text-lg text-gray-900 mb-2">NFT & Crypto</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Buy, sell, and hold digital assets and NFTs — exposure to blockchain technology at the frontier of finance.</p>
+      </div>
+      <div class="card-hover bg-white rounded-2xl p-6">
+        <div class="svc-icon" style="background:#eff6ff;color:#2563eb;"><i class="fas fa-robot"></i></div>
+        <h3 class="font-display font-bold text-lg text-gray-900 mb-2">Automated Trading</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Set your investment amount and duration then let our trading bot do the rest — fully on autopilot.</p>
+      </div>
+      <div class="card-hover bg-white rounded-2xl p-6">
+        <div class="svc-icon" style="background:#fff7ed;color:#f59e0b;"><i class="fas fa-vault"></i></div>
+        <h3 class="font-display font-bold text-lg text-gray-900 mb-2">Vault Protection</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Store funds in a time-locked vault with optional early-withdrawal penalties for added discipline and security.</p>
+      </div>
+      <div class="card-hover bg-white rounded-2xl p-6">
+        <div class="svc-icon" style="background:#f0fdf4;color:#16a34a;"><i class="fas fa-shield-alt"></i></div>
+        <h3 class="font-display font-bold text-lg text-gray-900 mb-2">Insured Assets</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">All portfolios, assets and funds stored on our servers are covered by our comprehensive insurance policy.</p>
+      </div>
+      <div class="card-hover bg-white rounded-2xl p-6">
+        <div class="svc-icon" style="background:#f8fafc;color:#475569;"><i class="fas fa-lock"></i></div>
+        <h3 class="font-display font-bold text-lg text-gray-900 mb-2">Secure Storage</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Virtually all digital assets are stored in cold, offline wallets with enterprise-grade security protocols.</p>
+      </div>
+      {% endwith %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     ABOUT STRIP
+════════════════════════════════════════════ -->
+<section class="py-20" style="background:linear-gradient(135deg,#f0f7ff,#ffffff);">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-14 items-center">
+      <div>
+        <div class="section-label"><i class="fas fa-handshake"></i>Why Ethical Finance</div>
+        <h2 class="section-title mb-5">Investing For You<br>and With You</h2>
+        <p class="text-gray-500 leading-relaxed mb-4">We believe that our 100% independent, employee ownership and singular business focus best aligns us — both as an organization and as individuals — with the long-term interests of our clients.</p>
+        <p class="text-gray-500 leading-relaxed mb-8">With no external parent or public shareholders to serve, we are empowered to run our business with a lasting, client-centric perspective.</p>
+        <div class="flex flex-wrap gap-4 mb-8">
+          <div class="flex items-center gap-2"><div class="w-5 h-5 rounded-full flex items-center justify-center bg-blue-600"><i class="fas fa-check text-white text-xs"></i></div><span class="text-sm font-medium text-gray-700">100% Employee Owned</span></div>
+          <div class="flex items-center gap-2"><div class="w-5 h-5 rounded-full flex items-center justify-center bg-blue-600"><i class="fas fa-check text-white text-xs"></i></div><span class="text-sm font-medium text-gray-700">Client-First Approach</span></div>
+          <div class="flex items-center gap-2"><div class="w-5 h-5 rounded-full flex items-center justify-center bg-blue-600"><i class="fas fa-check text-white text-xs"></i></div><span class="text-sm font-medium text-gray-700">Wall Street Standards</span></div>
+          <div class="flex items-center gap-2"><div class="w-5 h-5 rounded-full flex items-center justify-center bg-blue-600"><i class="fas fa-check text-white text-xs"></i></div><span class="text-sm font-medium text-gray-700">AI-Powered Analytics</span></div>
+        </div>
+        <a href="{% url 'about' %}"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white transition-all hover:scale-105"
+          style="background:linear-gradient(135deg,#1e3a8a,#2563eb);">
+          Learn More About Us <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="rounded-2xl overflow-hidden shadow-lg" style="height:200px;">
+          <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&q=80" alt="trading floor" class="w-full h-full object-cover">
+        </div>
+        <div class="rounded-2xl overflow-hidden shadow-lg mt-8" style="height:200px;">
+          <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=600&q=80" alt="finance data" class="w-full h-full object-cover">
+        </div>
+        <div class="rounded-2xl overflow-hidden shadow-lg" style="height:200px;">
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80" alt="analytics" class="w-full h-full object-cover">
+        </div>
+        <div class="rounded-2xl overflow-hidden shadow-lg mt-8" style="height:200px;">
+          <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&q=80" alt="team" class="w-full h-full object-cover">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     INVESTMENT PLANS (Dynamic from DB)
+════════════════════════════════════════════ -->
+<section id="plans" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-14">
+      <div class="section-label mx-auto"><i class="fas fa-layer-group"></i>Investment Plans</div>
+      <h2 class="section-title">Choose Your Growth Path</h2>
+      <p class="section-sub mx-auto mt-3">Start earning today. Every plan comes with daily profit payouts, referral bonuses, and full capital protection.</p>
+    </div>
+
+    {% if investment_tiers %}
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {% for tier in investment_tiers %}
+      <div class="plan-card {% if forloop.counter == 2 %}featured{% endif %}" style="{% if forloop.counter == 2 %}{% else %}{% endif %}">
+        {% if forloop.counter == 2 %}<div class="plan-badge">⭐ Most Popular</div>{% endif %}
+
+        <div class="mb-4">
+          <div class="text-xs font-bold uppercase tracking-widest mb-1 {% if forloop.counter == 2 %}text-blue-200{% else %}text-blue-600{% endif %}">
+            {{ tier.name }}
+          </div>
+          <div class="text-4xl font-display font-extrabold {% if forloop.counter == 2 %}text-white{% else %}text-gray-900{% endif %}">
+            {{ tier.roi_percentage }}<span class="text-xl font-semibold {% if forloop.counter == 2 %}text-blue-200{% else %}text-gray-400{% endif %}">%</span>
+          </div>
+          <div class="text-sm {% if forloop.counter == 2 %}text-blue-200{% else %}text-gray-500{% endif %} mt-1">Total ROI over {{ tier.duration_days }} days</div>
+        </div>
+
+        <div class="border-t {% if forloop.counter == 2 %}border-blue-500{% else %}border-gray-100{% endif %} my-5 pt-5 space-y-3">
+          <div class="flex justify-between text-sm">
+            <span class="{% if forloop.counter == 2 %}text-blue-200{% else %}text-gray-500{% endif %}">Min Deposit</span>
+            <span class="font-semibold {% if forloop.counter == 2 %}text-white{% else %}text-gray-900{% endif %}">${{ tier.min_investment|floatformat:0 }}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="{% if forloop.counter == 2 %}text-blue-200{% else %}text-gray-500{% endif %}">Max Deposit</span>
+            <span class="font-semibold {% if forloop.counter == 2 %}text-white{% else %}text-gray-900{% endif %}">{% if tier.max_investment %}${{ tier.max_investment|floatformat:0 }}{% else %}Unlimited{% endif %}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="{% if forloop.counter == 2 %}text-blue-200{% else %}text-gray-500{% endif %}">Duration</span>
+            <span class="font-semibold {% if forloop.counter == 2 %}text-white{% else %}text-gray-900{% endif %}">{{ tier.duration_days }} Days</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="{% if forloop.counter == 2 %}text-blue-200{% else %}text-gray-500{% endif %}">Referral Bonus</span>
+            <span class="font-semibold {% if forloop.counter == 2 %}text-white{% else %}text-gray-900{% endif %}">{{ tier.referral_bonus }}%</span>
+          </div>
+          {% if tier.capital_return %}
+          <div class="flex items-center gap-2 text-sm pt-1">
+            <i class="fas fa-check-circle {% if forloop.counter == 2 %}text-green-300{% else %}text-green-500{% endif %}"></i>
+            <span class="{% if forloop.counter == 2 %}text-blue-100{% else %}text-gray-600{% endif %}">Capital returned at maturity</span>
+          </div>
+          {% endif %}
+          {% if tier.incentive_description %}
+          <p class="text-xs {% if forloop.counter == 2 %}text-blue-200{% else %}text-gray-500{% endif %} pt-1">{{ tier.incentive_description }}</p>
+          {% endif %}
+        </div>
+
+        <a href="{% url 'signup' %}"
+          class="block text-center py-3 rounded-xl font-bold text-sm transition-all hover:scale-105
+          {% if forloop.counter == 2 %}text-blue-900{% else %}text-white{% endif %}"
+          style="{% if forloop.counter == 2 %}background:#fff;{% else %}background:linear-gradient(135deg,#1e3a8a,#2563eb);{% endif %}">
+          Get Started
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-12 text-gray-400">
+      <i class="fas fa-layer-group text-4xl mb-3 block opacity-30"></i>
+      <p>Investment plans coming soon. Check back shortly.</p>
+    </div>
+    {% endif %}
+
+    <div class="text-center mt-10">
+      <a href="{% url 'packages' %}" class="inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-800 text-sm">
+        View all plans <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════ -->
+<section class="py-20" style="background:linear-gradient(135deg,#1e3050,#1e3a8a);">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14">
+      <div class="inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase" style="background:rgba(255,255,255,.12);color:#93c5fd;border:1px solid rgba(255,255,255,.2);">
+        <i class="fas fa-play-circle"></i>How It Works
+      </div>
+      <h2 class="text-white font-display font-extrabold mb-3" style="font-size:clamp(1.75rem,3.5vw,2.75rem);">Start Earning in 3 Simple Steps</h2>
+      <p style="color:#93c5fd;font-size:16px;">Getting started with Ethical Finance takes less than 2 minutes.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="text-center p-8 rounded-2xl" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);">
+        <div class="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center text-2xl" style="background:rgba(37,99,235,.3);">
+          <i class="fas fa-user-plus text-blue-300"></i>
+        </div>
+        <div class="text-5xl font-display font-black mb-3" style="color:rgba(255,255,255,.08);">01</div>
+        <h3 class="text-white font-display font-bold text-xl mb-3">Create Account</h3>
+        <p style="color:#93c5fd;font-size:14px;line-height:1.7;">Register in under 60 seconds. No KYC delays. Instant access to your personalized investment dashboard.</p>
+      </div>
+      <div class="text-center p-8 rounded-2xl" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);">
+        <div class="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center text-2xl" style="background:rgba(37,99,235,.4);">
+          <i class="fas fa-wallet text-blue-200"></i>
+        </div>
+        <div class="text-5xl font-display font-black mb-3" style="color:rgba(255,255,255,.08);">02</div>
+        <h3 class="text-white font-display font-bold text-xl mb-3">Make a Deposit</h3>
+        <p style="color:#93c5fd;font-size:14px;line-height:1.7;">Fund your account with Bitcoin, Ethereum, TON, or Solana. Pick a plan that matches your investment goals.</p>
+      </div>
+      <div class="text-center p-8 rounded-2xl" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);">
+        <div class="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center text-2xl" style="background:rgba(37,99,235,.3);">
+          <i class="fas fa-coins text-yellow-300"></i>
+        </div>
+        <div class="text-5xl font-display font-black mb-3" style="color:rgba(255,255,255,.08);">03</div>
+        <h3 class="text-white font-display font-bold text-xl mb-3">Earn Daily Profits</h3>
+        <p style="color:#93c5fd;font-size:14px;line-height:1.7;">Watch your balance grow with daily profit credits. Withdraw anytime to any crypto wallet worldwide.</p>
+      </div>
+    </div>
+    <div class="text-center mt-10">
+      <a href="{% url 'signup' %}"
+        class="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-sm text-blue-900 transition-all hover:scale-105"
+        style="background:linear-gradient(135deg,#f59e0b,#fbbf24);box-shadow:0 6px 25px rgba(245,158,11,.35);">
+        <i class="fas fa-rocket"></i>Open Free Account Now
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     TESTIMONIALS
+════════════════════════════════════════════ -->
+<section class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-14">
+      <div class="section-label mx-auto"><i class="fas fa-star"></i>Client Reviews</div>
+      <h2 class="section-title">What Our Investors Say</h2>
+      <p class="section-sub mx-auto mt-3">Providing an excellent service is at the heart of our business.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="testimonial-card card-hover">
+        <div class="flex items-center gap-1 mb-4">
+          {% for i in "12345" %}<i class="fas fa-star text-yellow-400 text-sm"></i>{% endfor %}
+        </div>
+        <p class="text-gray-600 text-sm leading-relaxed mb-5">"What a team! They make everything flow smoothly. The service makes the whole process stress free. They keep you informed throughout and make sure you get the service to suit your individual needs."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#1e3a8a,#2563eb);">D</div>
+          <div><div class="font-semibold text-gray-900 text-sm">Dan</div><div class="text-gray-400 text-xs">Paris, France</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card card-hover" style="border-color:#2563eb;">
+        <div class="flex items-center gap-1 mb-4">
+          {% for i in "12345" %}<i class="fas fa-star text-yellow-400 text-sm"></i>{% endfor %}
+        </div>
+        <p class="text-gray-600 text-sm leading-relaxed mb-5">"Thanks for helping me with my first investment experience ever. You have made the process very easy. I will definitely continue to patronize your services. Highly recommended!"</p>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#1e3a8a,#2563eb);">B</div>
+          <div><div class="font-semibold text-gray-900 text-sm">Benji</div><div class="text-gray-400 text-xs">Madrid, Spain</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card card-hover">
+        <div class="flex items-center gap-1 mb-4">
+          {% for i in "12345" %}<i class="fas fa-star text-yellow-400 text-sm"></i>{% endfor %}
+        </div>
+        <p class="text-gray-600 text-sm leading-relaxed mb-5">"Very reliable and trustworthy investment company. I love their customer support and swift payment. This company provides one of the best services I have encountered. Highly recommended."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm" style="background:linear-gradient(135deg,#1e3a8a,#2563eb);">R</div>
+          <div><div class="font-semibold text-gray-900 text-sm">Robert</div><div class="text-gray-400 text-xs">Basel, Switzerland</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     CTA BANNER
+════════════════════════════════════════════ -->
+<section class="py-16 mx-6 mb-6 rounded-3xl overflow-hidden relative" style="background:linear-gradient(135deg,#1e3050,#2563eb);">
+  <div class="absolute inset-0 opacity-10" style="background:url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1400&q=60') center/cover;"></div>
+  <div class="relative max-w-4xl mx-auto px-6 text-center">
+    <h2 class="text-white font-display font-extrabold mb-3" style="font-size:clamp(1.6rem,3.5vw,2.5rem);">Open Your Account for Free</h2>
+    <p class="mb-8" style="color:#93c5fd;font-size:16px;">Join over 9,000 investors already earning with Ethical Finance. Start with as little as $100.</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="{% url 'signup' %}"
+        class="px-8 py-4 rounded-xl font-bold text-sm text-blue-900 transition-all hover:scale-105"
+        style="background:linear-gradient(135deg,#f59e0b,#fbbf24);box-shadow:0 6px 25px rgba(245,158,11,.35);">
+        <i class="fas fa-rocket mr-2"></i>Get Started Free
+      </a>
+      <a href="{% url 'contact' %}"
+        class="px-8 py-4 rounded-xl font-bold text-sm text-white transition-all hover:scale-105"
+        style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);">
+        <i class="fas fa-headset mr-2"></i>Talk to an Expert
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer style="background:#0f172a;">
+  <div class="max-w-7xl mx-auto px-6 pt-16 pb-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+      <!-- Brand -->
+      <div class="lg:col-span-1">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#1e3a8a,#2563eb);">
+            <i class="fas fa-chart-line text-white text-xs"></i>
+          </div>
+          <span class="font-display font-bold text-white text-lg">Ethical<span style="color:#60a5fa;">Finance</span></span>
+        </div>
+        <p class="text-gray-400 text-sm leading-relaxed mb-5">A premium investment platform powered by AI and blockchain technology. Serving clients across 80 countries.</p>
+        <div class="flex gap-3">
+          <a href="https://wa.me/2349121304245" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-110" style="background:rgba(255,255,255,.08);"><i class="fab fa-whatsapp text-green-400 text-sm"></i></a>
+          <a href="#" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-110" style="background:rgba(255,255,255,.08);"><i class="fab fa-telegram text-blue-400 text-sm"></i></a>
+          <a href="#" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-110" style="background:rgba(255,255,255,.08);"><i class="fab fa-twitter text-sky-400 text-sm"></i></a>
+        </div>
+      </div>
+      <!-- Navigation -->
+      <div>
+        <h5 class="text-white font-semibold text-sm mb-4">Navigation</h5>
+        <ul class="space-y-2.5">
+          <li><a href="{% url 'home' %}" class="footer-link">Home</a></li>
+          <li><a href="{% url 'about' %}" class="footer-link">About Us</a></li>
+          <li><a href="{% url 'packages' %}" class="footer-link">Investment Plans</a></li>
+          <li><a href="{% url 'faq' %}" class="footer-link">FAQ</a></li>
+        </ul>
+      </div>
+      <!-- Legal -->
+      <div>
+        <h5 class="text-white font-semibold text-sm mb-4">Legal & Support</h5>
+        <ul class="space-y-2.5">
+          <li><a href="{% url 'terms' %}" class="footer-link">Terms of Service</a></li>
+          <li><a href="{% url 'privacy' %}" class="footer-link">Privacy Policy</a></li>
+          <li><a href="{% url 'contact' %}" class="footer-link">Contact Support</a></li>
+          <li><a href="{% url 'faq' %}" class="footer-link">Help Center</a></li>
+        </ul>
+      </div>
+      <!-- Account -->
+      <div>
+        <h5 class="text-white font-semibold text-sm mb-4">Account</h5>
+        <ul class="space-y-2.5">
+          <li><a href="{% url 'signin' %}" class="footer-link">Sign In</a></li>
+          <li><a href="{% url 'signup' %}" class="footer-link">Create Account</a></li>
+          <li><a href="{% url 'dashboard' %}" class="footer-link">Dashboard</a></li>
+          <li><a href="https://wa.me/2349121304245" class="footer-link">Live Support</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-gray-500 text-sm">© 2024 Ethical Finance. All rights reserved.</p>
+      <div class="flex items-center gap-4">
+        <span class="flex items-center gap-1.5 text-gray-500 text-xs"><i class="fas fa-shield-alt text-green-400"></i>SSL Secured</span>
+        <span class="flex items-center gap-1.5 text-gray-500 text-xs"><i class="fas fa-lock text-blue-400"></i>256-bit Encryption</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════
+     LIVE ACTIVITY POPUP (Hordstake-style)
+════════════════════════════════════════════ -->
+<div id="live-activity-popup">
+  <div class="flex items-start gap-3 p-4 rounded-2xl shadow-2xl" style="background:#fff;border:1px solid #e2e8f0;max-width:320px;min-width:270px;">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#eff6ff;">
+      <i class="fas fa-check-circle text-blue-600 text-sm"></i>
+    </div>
+    <div class="min-w-0">
+      <div class="flex items-center gap-1.5 mb-0.5">
+        <span class="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></span>
+        <span class="text-xs font-semibold text-green-600 uppercase tracking-wider">Live Activity</span>
+      </div>
+      <p class="text-gray-800 text-sm font-medium leading-snug" id="live-activity-text">Someone from USA just invested $500</p>
+      <span class="text-gray-400 text-xs">Just now</span>
+    </div>
+    <button onclick="document.getElementById('live-activity-popup').style.display='none'" class="text-gray-300 hover:text-gray-500 flex-shrink-0 mt-0.5">
+      <i class="fas fa-times text-xs"></i>
+    </button>
+  </div>
+</div>
+
+<!-- WhatsApp FAB -->
+<a href="https://wa.me/2349121304245" target="_blank"
+  class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110"
+  style="background:linear-gradient(135deg,#25d366,#128c7e);box-shadow:0 4px 20px rgba(37,211,102,.5);">
+  <i class="fab fa-whatsapp text-2xl text-white"></i>
+</a>
+
+<!-- Google Translate -->
+<div id="google_translate_element" style="position:fixed;top:75px;right:10px;z-index:9998;background:white;padding:4px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.1);"></div>
+<script>function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'en,es,pt,ar,fr,de,ru,zh-CN,ja,hi,it,tr,ko'},'google_translate_element');}</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
+
+<!-- Smartsupp -->
+<script type="text/javascript">
+var _smartsupp = _smartsupp || {};
+_smartsupp.key = '8b781d786bde4caaa06afbea717728605331bea4';
+window.smartsupp||(function(d){var s,c,o=smartsupp=function(){o._.push(arguments)};o._=[];s=d.getElementsByTagName('script')[0];c=d.createElement('script');c.type='text/javascript';c.charset='utf-8';c.async=true;c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);})(document);
+</script>
+
+<script>
+// ── NAVBAR scroll effect ──────────────────────────────
+window.addEventListener('scroll', function(){
+  var nb = document.getElementById('navbar');
+  if(window.scrollY > 60) nb.classList.add('scrolled');
+  else nb.classList.remove('scrolled');
+});
+
+// ── HERO SLIDER ───────────────────────────────────────
+var heroData = [
+  {title:'Sustainable Investing', sub:'Designed For You', body:'We help people, businesses and institutions build, preserve and manage wealth so they can pursue their financial goals. At Ethical Finance, clients always come first.'},
+  {title:'Investing Service', sub:'You Can Trust', body:'Offering clients investment solutions across asset classes, styles, capitalizations and geographies — with precision and transparency.'},
+  {title:'Broad Scope,', sub:'Singular Focus', body:'We offer clients around the world investment solutions across asset classes, capitalizations, styles and geographies in both public and private markets.'},
+];
+var slides = document.querySelectorAll('.hero-slide');
+var dots   = document.querySelectorAll('.slide-dot');
+var curSlide = 0;
+
+function goSlide(idx){
+  slides[curSlide].classList.remove('active');
+  dots[curSlide].style.width='8px';dots[curSlide].style.background='rgba(255,255,255,.35)';
+  curSlide = (idx + slides.length) % slides.length;
+  slides[curSlide].classList.add('active');
+  dots[curSlide].style.width='32px';dots[curSlide].style.background='rgba(255,255,255,.9)';
+  document.getElementById('hero-title-line1').textContent = heroData[curSlide].title;
+  document.querySelector('[style*="color:#60a5fa"]').textContent = heroData[curSlide].sub;
+  document.getElementById('hero-subtitle').textContent = heroData[curSlide].body;
+}
+function nextSlide(){goSlide(curSlide+1);}
+function prevSlide(){goSlide(curSlide-1);}
+setInterval(nextSlide, 7000);
+
+// ── MOBILE MENU ───────────────────────────────────────
+function toggleMobileMenu(){
+  var menu = document.getElementById('mobile-menu');
+  var icon = document.getElementById('ham-icon');
+  menu.classList.toggle('open');
+  icon.className = menu.classList.contains('open') ? 'fas fa-times text-gray-700 text-xl' : 'fas fa-bars text-gray-700 text-xl';
+}
+
+// ── LIVE ACTIVITY POPUP ───────────────────────────────
+var countries = ['USA','Germany','France','Australia','Canada','UK','Sweden','Netherlands','Singapore','Japan','UAE','Brazil','South Africa','India'];
+var activities = [
+  'just invested','just withdrew','is trading with','just earned profit of'
+];
+var amounts = ['$500','$1,500','$2,000','$5,000','$1,000','$3,000','$750','$10,000','$4,500','$600'];
+
+function showLiveActivity(){
+  var country  = countries[Math.floor(Math.random()*countries.length)];
+  var activity = activities[Math.floor(Math.random()*activities.length)];
+  var amount   = amounts[Math.floor(Math.random()*amounts.length)];
+  document.getElementById('live-activity-text').textContent = 'Someone from ' + country + ' ' + activity + ' ' + amount;
+  var popup = document.getElementById('live-activity-popup');
+  popup.style.display = 'block';
+  setTimeout(function(){ popup.style.display = 'none'; }, 7000);
+  var next = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
+  setTimeout(showLiveActivity, next);
+}
+setTimeout(showLiveActivity, 3000);
+
+// ── SMOOTH SCROLL for anchor links ───────────────────
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    var target = document.querySelector(this.getAttribute('href'));
+    if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth'});}
+  }

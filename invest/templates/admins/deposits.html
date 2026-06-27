@@ -1,0 +1,59 @@
+{% extends 'admins/base.html' %}
+{% block title %}Deposits – Admin | AspenOptions{% endblock %}
+{% block page_title %}Deposit Management{% endblock %}
+{% block content %}
+<div class="glass rounded-2xl overflow-hidden border border-white/5">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.06);">
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">User</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Amount</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden sm:table-cell">Plan</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden md:table-cell">TxID</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden sm:table-cell">Date</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Status</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for deposit in deposits %}
+        <tr style="border-bottom:1px solid rgba(255,255,255,.03);" class="hover:bg-white/[.02] transition-colors">
+          <td class="p-4">
+            <div class="text-white text-sm font-medium">{{ deposit.user.get_full_name|default:deposit.user.username }}</div>
+            <div class="text-slate-500 text-xs">{{ deposit.user.email }}</div>
+          </td>
+          <td class="p-4 text-white font-bold text-sm">${{ deposit.amount|floatformat:2 }}</td>
+          <td class="p-4 hidden sm:table-cell">
+            <span class="text-xs px-2 py-0.5 rounded-full" style="background:rgba(251,191,36,.15);color:#fbbf24;">{{ deposit.investment_tier.name }}</span>
+          </td>
+          <td class="p-4 text-slate-500 font-mono text-xs hidden md:table-cell">{{ deposit.transaction_id|truncatechars:20 }}</td>
+          <td class="p-4 text-slate-400 text-sm hidden sm:table-cell">{{ deposit.created_at|date:"M d, Y" }}</td>
+          <td class="p-4"><span class="badge-{{ deposit.status }} text-xs px-2.5 py-1 rounded-full font-semibold">{{ deposit.status|title }}</span></td>
+          <td class="p-4">
+            {% if deposit.status == 'PENDING' %}
+            <form method="post" class="flex gap-1.5 flex-wrap">
+              {% csrf_token %}
+              <input type="hidden" name="deposit_id" value="{{ deposit.id }}">
+              <button name="action" value="approve" class="btn-green px-3 py-1.5 rounded-lg text-xs"
+                onclick="return confirm('Approve this deposit of ${{ deposit.amount }}?')">
+                <i class="fas fa-check mr-1"></i>Approve
+              </button>
+              <button name="action" value="reject" class="btn-red px-3 py-1.5 rounded-lg text-xs"
+                onclick="return confirm('Reject this deposit?')">
+                <i class="fas fa-times mr-1"></i>Reject
+              </button>
+            </form>
+            {% else %}
+            <span class="text-slate-600 text-xs">Processed</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="p-8 text-center text-slate-500">No deposit records found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

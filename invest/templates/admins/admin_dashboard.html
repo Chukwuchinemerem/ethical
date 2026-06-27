@@ -1,0 +1,118 @@
+{% extends 'admins/base.html' %}
+{% block title %}Overview – Admin | AspenOptions{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+{% block content %}
+
+<!-- Stats grid -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div class="glass rounded-2xl p-5 border border-white/5 hover:border-yellow-500/20 transition-all">
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-slate-400 text-xs uppercase tracking-wider">Users</span>
+      <i class="fas fa-users text-yellow-400"></i>
+    </div>
+    <div class="text-3xl font-display font-black text-white">{{ total_users }}</div>
+    <div class="text-slate-500 text-xs mt-1">Registered</div>
+  </div>
+  <div class="glass rounded-2xl p-5 border border-white/5 hover:border-sky-500/20 transition-all">
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-slate-400 text-xs uppercase tracking-wider">Deposited Today</span>
+      <i class="fas fa-arrow-down text-sky-400"></i>
+    </div>
+    <div class="text-3xl font-display font-black text-sky-400">${{ total_deposits_today|floatformat:0|default:"0" }}</div>
+    <div class="text-slate-500 text-xs mt-1">Approved today</div>
+  </div>
+  <div class="glass rounded-2xl p-5 border border-white/5 hover:border-orange-500/20 transition-all">
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-slate-400 text-xs uppercase tracking-wider">Pending Deposits</span>
+      <i class="fas fa-clock text-orange-400"></i>
+    </div>
+    <div class="text-3xl font-display font-black text-orange-400">{{ pending_deposits }}</div>
+    <div class="text-slate-500 text-xs mt-1">Awaiting approval</div>
+  </div>
+  <div class="glass rounded-2xl p-5 border border-white/5 hover:border-red-500/20 transition-all">
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-slate-400 text-xs uppercase tracking-wider">Pending Withdrawals</span>
+      <i class="fas fa-arrow-up text-red-400"></i>
+    </div>
+    <div class="text-3xl font-display font-black text-red-400">{{ pending_withdrawals }}</div>
+    <div class="text-slate-500 text-xs mt-1">Awaiting processing</div>
+  </div>
+</div>
+
+<!-- Pending alerts -->
+{% if pending_deposits or pending_withdrawals %}
+<div class="grid sm:grid-cols-2 gap-4 mb-8">
+  {% if pending_deposits %}
+  <a href="{% url 'admin_deposits' %}" class="flex items-center gap-4 glass rounded-2xl p-5 border border-yellow-500/30 hover:border-yellow-500/50 transition-all">
+    <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(245,158,11,.15);">
+      <i class="fas fa-clock text-yellow-400 text-lg"></i>
+    </div>
+    <div>
+      <div class="text-white font-semibold text-sm">{{ pending_deposits }} Pending Deposit{{ pending_deposits|pluralize }}</div>
+      <div class="text-slate-400 text-xs">Awaiting approval</div>
+    </div>
+    <i class="fas fa-arrow-right text-slate-600 ml-auto"></i>
+  </a>
+  {% endif %}
+  {% if pending_withdrawals %}
+  <a href="{% url 'admin_withdrawals' %}" class="flex items-center gap-4 glass rounded-2xl p-5 border border-orange-500/30 hover:border-orange-500/50 transition-all">
+    <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(249,115,22,.15);">
+      <i class="fas fa-money-bill-transfer text-orange-400 text-lg"></i>
+    </div>
+    <div>
+      <div class="text-white font-semibold text-sm">{{ pending_withdrawals }} Pending Withdrawal{{ pending_withdrawals|pluralize }}</div>
+      <div class="text-slate-400 text-xs">Awaiting processing</div>
+    </div>
+    <i class="fas fa-arrow-right text-slate-600 ml-auto"></i>
+  </a>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- Recent deposits table -->
+<h2 class="font-display font-bold text-white mb-4 text-sm">Recent Deposits</h2>
+<div class="glass rounded-2xl overflow-hidden border border-white/5">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.06);">
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider">User</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider">Amount</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider hidden sm:table-cell">Plan</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider hidden sm:table-cell">Crypto</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider">Status</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider hidden md:table-cell">Date</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for deposit in recent_deposits %}
+        <tr style="border-bottom:1px solid rgba(255,255,255,.03);" class="hover:bg-white/[.02] transition-colors">
+          <td class="p-4">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+                style="background:linear-gradient(135deg,#b7791f,#f59e0b);">
+                {{ deposit.user.first_name|first|upper }}{{ deposit.user.last_name|first|upper }}
+              </div>
+              <span class="text-white text-sm">{{ deposit.user.get_full_name|default:deposit.user.username }}</span>
+            </div>
+          </td>
+          <td class="p-4 text-white font-bold text-sm">${{ deposit.amount|floatformat:2 }}</td>
+          <td class="p-4 hidden sm:table-cell">
+            <span class="text-xs px-2 py-0.5 rounded-full" style="background:rgba(251,191,36,.15);color:#fbbf24;">
+              {{ deposit.investment_tier.name }}
+            </span>
+          </td>
+          <td class="p-4 text-slate-300 text-sm hidden sm:table-cell">{{ deposit.cryptocurrency.symbol }}</td>
+          <td class="p-4"><span class="badge-{{ deposit.status }} text-xs px-2.5 py-1 rounded-full font-semibold">{{ deposit.status|title }}</span></td>
+          <td class="p-4 text-slate-400 text-sm hidden md:table-cell">{{ deposit.created_at|date:"M d, Y" }}</td>
+          <td class="p-4"><a href="{% url 'admin_deposits' %}" class="text-yellow-400 hover:text-yellow-300 text-xs font-medium">View →</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="p-8 text-center text-slate-500">No recent deposits.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

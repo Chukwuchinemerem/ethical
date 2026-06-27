@@ -1,0 +1,152 @@
+{% extends 'invest/base.html' %}
+{% block title %}Profile – AspenOptions{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+
+  <!-- Profile info -->
+  <div class="glass rounded-2xl p-6 sm:p-8 border border-white/5">
+    <div class="flex items-center gap-4 mb-6">
+      <div class="w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-2xl text-white flex-shrink-0"
+        style="background:linear-gradient(135deg,#b7791f,#f59e0b);">
+        {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+      </div>
+      <div>
+        <h2 class="font-display text-xl font-bold text-white">{{ user.get_full_name|default:user.username }}</h2>
+        <p class="text-slate-400 text-sm">{{ user.email }}</p>
+        <p class="text-slate-500 text-xs mt-0.5">Member since {{ user.date_joined|date:"M Y" }}</p>
+      </div>
+    </div>
+
+    <form method="post" id="profile-form" class="space-y-4">
+      {% csrf_token %}
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="text-slate-400 text-xs uppercase tracking-wider mb-1.5 block font-medium">First Name</label>
+          <input type="text" name="first_name" value="{{ user.first_name }}"
+            class="w-full px-4 py-3 rounded-xl text-white focus:outline-none"
+            style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">
+        </div>
+        <div>
+          <label class="text-slate-400 text-xs uppercase tracking-wider mb-1.5 block font-medium">Last Name</label>
+          <input type="text" name="last_name" value="{{ user.last_name }}"
+            class="w-full px-4 py-3 rounded-xl text-white focus:outline-none"
+            style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">
+        </div>
+      </div>
+      <div>
+        <label class="text-slate-400 text-xs uppercase tracking-wider mb-1.5 block font-medium">Email</label>
+        <input type="email" name="email" value="{{ user.email }}"
+          class="w-full px-4 py-3 rounded-xl text-white focus:outline-none"
+          style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="text-slate-400 text-xs uppercase tracking-wider mb-1.5 block font-medium">Phone</label>
+          <input type="text" name="phone" value="{{ user.phone|default:'' }}"
+            class="w-full px-4 py-3 rounded-xl text-white focus:outline-none"
+            style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">
+        </div>
+        <div>
+          <label class="text-slate-400 text-xs uppercase tracking-wider mb-1.5 block font-medium">Country</label>
+          <input type="text" name="country" value="{{ user.country|default:'' }}"
+            class="w-full px-4 py-3 rounded-xl text-white focus:outline-none"
+            style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">
+        </div>
+      </div>
+      <button type="submit" class="btn-gold w-full py-3.5 rounded-xl font-bold text-sm">
+        <i class="fas fa-save mr-2"></i>Save Changes
+      </button>
+    </form>
+  </div>
+
+  <!-- Password change -->
+  <div class="glass rounded-2xl p-6 sm:p-8 border border-white/5">
+    <h3 class="font-display font-bold text-white text-base mb-4">Change Password</h3>
+    <div class="space-y-4" id="pw-form">
+      <div>
+        <label class="text-slate-400 text-xs uppercase tracking-wider mb-1.5 block font-medium">Current Password</label>
+        <input type="password" id="cur-pw" placeholder="••••••••"
+          class="w-full px-4 py-3 rounded-xl text-white focus:outline-none placeholder-slate-600"
+          style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">
+      </div>
+      <div>
+        <label class="text-slate-400 text-xs uppercase tracking-wider mb-1.5 block font-medium">New Password</label>
+        <input type="password" id="new-pw" placeholder="Min 8 characters"
+          class="w-full px-4 py-3 rounded-xl text-white focus:outline-none placeholder-slate-600"
+          style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">
+      </div>
+      <div>
+        <label class="text-slate-400 text-xs uppercase tracking-wider mb-1.5 block font-medium">Confirm Password</label>
+        <input type="password" id="conf-pw" placeholder="Re-enter new password"
+          class="w-full px-4 py-3 rounded-xl text-white focus:outline-none placeholder-slate-600"
+          style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">
+      </div>
+      <div id="pw-msg" class="hidden text-sm px-4 py-3 rounded-xl"></div>
+      <button onclick="changePassword()" class="btn-gold w-full py-3.5 rounded-xl font-bold text-sm" id="pw-btn">
+        <i class="fas fa-lock mr-2"></i>Update Password
+      </button>
+    </div>
+  </div>
+
+  <!-- Referral code -->
+  <div class="glass rounded-2xl p-6 border border-white/5">
+    <h3 class="font-display font-bold text-white text-base mb-3">Referral Code</h3>
+    <div class="flex gap-2">
+      <input type="text" value="{{ user.referral_code }}" readonly
+        class="flex-1 px-3 py-2.5 rounded-xl text-slate-300 font-mono text-sm focus:outline-none"
+        style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);">
+      <button onclick="navigator.clipboard.writeText('{{ user.referral_code }}');this.innerHTML='Copied!';setTimeout(()=>this.innerHTML='Copy',2000);"
+        class="btn-gold px-4 py-2 rounded-xl text-xs">Copy</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+// Profile update (AJAX)
+document.getElementById('profile-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  var fd = new FormData(this);
+  fetch('', {method:'POST', body:fd})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var msg = document.createElement('div');
+      msg.className = 'fixed top-4 right-4 z-[999] p-4 rounded-2xl text-sm ' + (d.success ? 'text-green-400' : 'text-red-400');
+      msg.style.background = '#0f1f3d';
+      msg.style.border = d.success ? '1px solid rgba(34,197,94,.4)' : '1px solid rgba(220,38,38,.4)';
+      msg.textContent = d.message;
+      document.body.appendChild(msg);
+      setTimeout(function(){ msg.remove(); }, 3000);
+    });
+});
+
+function changePassword(){
+  var cur = document.getElementById('cur-pw').value;
+  var np = document.getElementById('new-pw').value;
+  var cp = document.getElementById('conf-pw').value;
+  var msgEl = document.getElementById('pw-msg');
+  if(np !== cp){ showPWMsg('Passwords do not match','red'); return; }
+  if(np.length < 8){ showPWMsg('Password must be at least 8 characters','red'); return; }
+  document.getElementById('pw-btn').innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Updating...';
+  fetch('', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value},
+    body: JSON.stringify({current_password:cur, new_password:np})
+  }).then(function(r){return r.json();}).then(function(d){
+    showPWMsg(d.message, d.success ? 'green' : 'red');
+    document.getElementById('pw-btn').innerHTML = '<i class="fas fa-lock mr-2"></i>Update Password';
+    if(d.success){ document.getElementById('cur-pw').value=''; document.getElementById('new-pw').value=''; document.getElementById('conf-pw').value=''; }
+  });
+}
+function showPWMsg(msg, color){
+  var el = document.getElementById('pw-msg');
+  el.textContent = msg;
+  el.style.background = color==='green' ? 'rgba(34,197,94,.1)' : 'rgba(220,38,38,.1)';
+  el.style.color = color==='green' ? '#4ade80' : '#f87171';
+  el.style.border = color==='green' ? '1px solid rgba(34,197,94,.3)' : '1px solid rgba(220,38,38,.3)';
+  el.classList.remove('hidden');
+  setTimeout(function(){ el.classList.add('hidden'); }, 4000);
+}
+</script>
+{% endblock %}

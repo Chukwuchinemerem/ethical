@@ -1,0 +1,58 @@
+{% extends 'invest/base.html' %}
+{% block title %}My Investments – AspenOptions{% endblock %}
+{% block page_title %}My Investments{% endblock %}
+{% block content %}
+<div class="space-y-4">
+  {% for inv in investments %}
+  <div class="glass rounded-2xl p-5 border border-white/5 hover:border-yellow-500/20 transition-all">
+    <div class="flex items-start justify-between mb-4 flex-wrap gap-2">
+      <div>
+        <div class="text-white font-semibold">{{ inv.tier.name }} Plan</div>
+        <div class="text-slate-500 text-xs mt-0.5">Started {{ inv.start_date|date:"M d, Y" }}</div>
+      </div>
+      <div class="flex items-center gap-3">
+        {% if not inv.is_completed %}
+        <span class="badge-active text-xs px-2.5 py-1 rounded-full font-semibold">Active</span>
+        {% else %}
+        <span class="badge-approved text-xs px-2.5 py-1 rounded-full font-semibold">Completed</span>
+        {% endif %}
+        <div class="text-right">
+          <div class="text-white font-bold">${{ inv.amount|floatformat:2 }}</div>
+          <div class="text-yellow-400 text-xs">+{{ inv.tier.roi_percentage }}% ROI</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-3 mb-4 text-sm">
+      <div class="rounded-xl p-3 text-center" style="background:rgba(255,255,255,.04);">
+        <div class="text-slate-500 text-xs mb-1">Invested</div>
+        <div class="text-white font-semibold">${{ inv.amount|floatformat:2 }}</div>
+      </div>
+      <div class="rounded-xl p-3 text-center" style="background:rgba(255,255,255,.04);">
+        <div class="text-slate-500 text-xs mb-1">Profit Earned</div>
+        <div class="text-green-400 font-semibold">+${{ inv.profit_earned|floatformat:2 }}</div>
+      </div>
+      <div class="rounded-xl p-3 text-center" style="background:rgba(255,255,255,.04);">
+        <div class="text-slate-500 text-xs mb-1">Duration</div>
+        <div class="text-white font-semibold">{{ inv.tier.duration_days }}d</div>
+      </div>
+    </div>
+    {% if not inv.is_completed %}
+    <div class="flex items-center gap-2">
+      <div class="flex-1 h-2 rounded-full" style="background:rgba(255,255,255,.08);">
+        <div class="h-2 rounded-full transition-all"
+          style="width:{{ inv.progress_percent }}%;background:linear-gradient(90deg,#b7791f,#f59e0b);"></div>
+      </div>
+      <span class="text-slate-400 text-xs">{{ inv.progress_percent }}%</span>
+    </div>
+    {% endif %}
+  </div>
+  {% empty %}
+  <div class="glass rounded-2xl p-16 text-center border border-white/5">
+    <i class="fas fa-chart-line text-yellow-400 text-4xl mb-4 block opacity-50"></i>
+    <p class="text-slate-400 font-medium mb-2">No investments yet</p>
+    <p class="text-slate-600 text-sm mb-6">Make a deposit to start your investment journey.</p>
+    <a href="{% url 'deposit' %}" class="btn-gold px-6 py-2.5 rounded-xl text-sm inline-block">Make a Deposit</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

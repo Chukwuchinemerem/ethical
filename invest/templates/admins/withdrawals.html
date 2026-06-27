@@ -1,0 +1,78 @@
+{% extends 'admins/base.html' %}
+{% block title %}Withdrawals – Admin | AspenOptions{% endblock %}
+{% block page_title %}Withdrawal Management{% endblock %}
+{% block content %}
+
+<!-- Stats -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  <div class="glass rounded-2xl p-4 border border-yellow-500/20">
+    <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">Pending Amount</div>
+    <div class="text-2xl font-display font-black text-yellow-400">${{ total_pending|floatformat:2|default:"0.00" }}</div>
+  </div>
+  <div class="glass rounded-2xl p-4 border border-green-500/20">
+    <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">Approved Today</div>
+    <div class="text-2xl font-display font-black text-green-400">{{ approved_today|default:0 }}</div>
+  </div>
+  <div class="glass rounded-2xl p-4 border border-red-500/20">
+    <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">Rejected Today</div>
+    <div class="text-2xl font-display font-black text-red-400">{{ rejected_today|default:0 }}</div>
+  </div>
+  <div class="glass rounded-2xl p-4 border border-sky-500/20">
+    <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">Total Requests</div>
+    <div class="text-2xl font-display font-black text-sky-400">{{ total_count|default:0 }}</div>
+  </div>
+</div>
+
+<div class="glass rounded-2xl overflow-hidden border border-white/5">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.06);">
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">User</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Amount</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden sm:table-cell">Crypto</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden md:table-cell">Wallet</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden sm:table-cell">Date</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Status</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for w in withdrawals %}
+        <tr style="border-bottom:1px solid rgba(255,255,255,.03);" class="hover:bg-white/[.02] transition-colors">
+          <td class="p-4">
+            <div class="text-white text-sm font-medium">{{ w.user.get_full_name|default:w.user.username }}</div>
+            <div class="text-slate-500 text-xs">{{ w.user.email }}</div>
+          </td>
+          <td class="p-4 text-white font-bold text-sm">${{ w.amount|floatformat:2 }}</td>
+          <td class="p-4 text-slate-300 text-sm hidden sm:table-cell">{{ w.cryptocurrency.symbol }}</td>
+          <td class="p-4 text-slate-500 font-mono text-xs hidden md:table-cell">{{ w.wallet_address|truncatechars:20 }}</td>
+          <td class="p-4 text-slate-400 text-sm hidden sm:table-cell">{{ w.created_at|date:"M d, Y" }}</td>
+          <td class="p-4"><span class="badge-{{ w.status }} text-xs px-2.5 py-1 rounded-full font-semibold">{{ w.status|title }}</span></td>
+          <td class="p-4">
+            {% if w.status == 'PENDING' %}
+            <form method="post" class="flex gap-1.5 flex-wrap">
+              {% csrf_token %}
+              <input type="hidden" name="withdrawal_id" value="{{ w.id }}">
+              <button name="action" value="approve" class="btn-green px-3 py-1.5 rounded-lg text-xs"
+                onclick="return confirm('Approve withdrawal of ${{ w.amount }}?')">
+                <i class="fas fa-check mr-1"></i>Approve
+              </button>
+              <button name="action" value="reject" class="btn-red px-3 py-1.5 rounded-lg text-xs"
+                onclick="return confirm('Reject and refund this withdrawal?')">
+                <i class="fas fa-times mr-1"></i>Reject
+              </button>
+            </form>
+            {% else %}
+            <span class="text-slate-600 text-xs">Processed</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="p-8 text-center text-slate-500">No withdrawal records found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

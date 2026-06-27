@@ -1,0 +1,48 @@
+{% extends 'admins/base.html' %}
+{% block title %}Investments – Admin | AspenOptions{% endblock %}
+{% block page_title %}Investment Management{% endblock %}
+{% block content %}
+<div class="glass rounded-2xl overflow-hidden border border-white/5">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.06);">
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">User</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Amount</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden sm:table-cell">Plan</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden md:table-cell">ROI</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden lg:table-cell">Profit Earned</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium">Status</th>
+          <th class="text-left p-4 text-slate-400 text-xs uppercase tracking-wider font-medium hidden md:table-cell">Started</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inv in investments %}
+        <tr style="border-bottom:1px solid rgba(255,255,255,.03);" class="hover:bg-white/[.02] transition-colors">
+          <td class="p-4">
+            <div class="text-white text-sm font-medium">{{ inv.user.get_full_name|default:inv.user.username }}</div>
+            <div class="text-slate-500 text-xs">{{ inv.user.email }}</div>
+          </td>
+          <td class="p-4 text-white font-bold text-sm">${{ inv.amount|floatformat:2 }}</td>
+          <td class="p-4 hidden sm:table-cell">
+            <span class="text-xs px-2 py-0.5 rounded-full" style="background:rgba(251,191,36,.15);color:#fbbf24;">{{ inv.tier.name }}</span>
+          </td>
+          <td class="p-4 text-yellow-400 font-bold text-sm hidden md:table-cell">{{ inv.tier.roi_percentage }}%</td>
+          <td class="p-4 text-green-400 font-bold text-sm hidden lg:table-cell">+${{ inv.profit_earned|floatformat:2 }}</td>
+          <td class="p-4">
+            {% if inv.is_completed %}
+            <span class="badge-approved text-xs px-2.5 py-1 rounded-full font-semibold">Completed</span>
+            {% else %}
+            <span class="badge-active text-xs px-2.5 py-1 rounded-full font-semibold">Active</span>
+            {% endif %}
+          </td>
+          <td class="p-4 text-slate-400 text-sm hidden md:table-cell">{{ inv.start_date|date:"M d, Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="p-8 text-center text-slate-500">No investments found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
