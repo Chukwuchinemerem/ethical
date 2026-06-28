@@ -5,6 +5,7 @@ services:
     plan: free
     buildCommand: "./build.sh"
     startCommand: "gunicorn profitLynx.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
+    releaseCommand: "python3 manage.py create_superuser"
     envVars:
       - key: SECRET_KEY
         generateValue: true
