@@ -16,8 +16,20 @@ class Command(BaseCommand):
         admin_phone = os.environ.get('SUPERUSER_PHONE', '0000000000')
         admin_country = os.environ.get('SUPERUSER_COUNTRY', 'Unknown')
 
-        if User.objects.filter(is_superuser=True).exists():
-            self.stdout.write('Superuser already exists.')
+        existing_superuser = User.objects.filter(is_superuser=True).first()
+        if existing_superuser:
+            existing_superuser.username = admin_username
+            existing_superuser.email = admin_email
+            existing_superuser.first_name = admin_first_name
+            existing_superuser.last_name = admin_last_name
+            existing_superuser.phone = admin_phone
+            existing_superuser.country = admin_country
+            existing_superuser.is_staff = True
+            existing_superuser.is_superuser = True
+            existing_superuser.is_active = True
+            existing_superuser.set_password(admin_password)
+            existing_superuser.save()
+            self.stdout.write(self.style.SUCCESS('Existing superuser repaired successfully.'))
             return
 
         if User.objects.filter(username=admin_username).exists():
@@ -29,6 +41,7 @@ class Command(BaseCommand):
             user.country = admin_country
             user.is_staff = True
             user.is_superuser = True
+            user.is_active = True
             user.set_password(admin_password)
             user.save()
             self.stdout.write(self.style.SUCCESS('Existing user upgraded to superuser.'))
