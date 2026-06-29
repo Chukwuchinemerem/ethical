@@ -27,8 +27,8 @@ else:
     ALLOWED_HOSTS = [
         'localhost',
         '127.0.0.1',
-        '.onrender.com',
-        'www.aspenoptions.org',
+        'ethicalfinance.onrender.com',
+        'ethicalfinance.it.com',
         'aspenoptions.org',
     ]
 
