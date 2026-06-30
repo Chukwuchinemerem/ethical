@@ -29,7 +29,7 @@ else:
         '127.0.0.1',
         'ethicalfinance.onrender.com',
         'ethicalfinance.it.com',
-        'aspenoptions.org',
+        'www.ethicalfinance.it.com',
     ]
 
 # ─── Application ─────────────────────────────────────────────────────────────
