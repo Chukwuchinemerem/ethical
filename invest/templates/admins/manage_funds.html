@@ -1,0 +1,72 @@
+{% extends 'admins/base.html' %}
+{% block title %}Manage Funds – Admin | Ethical Finance{% endblock %}
+{% block page_title %}Manage Funds{% endblock %}
+{% block content %}
+<div class="grid gap-6 lg:grid-cols-[360px_1fr]">
+  <div class="glass rounded-3xl p-6 border border-white/5">
+    <h2 class="font-display text-lg font-bold text-white mb-4">Quick Menu</h2>
+    <div class="space-y-3">
+      <a href="{% url 'admin_manage_funds' %}?type=add_balance" class="admin-link {% if selected_type == 'add_balance' %}active{% endif %}">
+        <i class="fas fa-plus-circle"></i>Add User Balance
+      </a>
+      <a href="{% url 'admin_manage_funds' %}?type=deduct_balance" class="admin-link {% if selected_type == 'deduct_balance' %}active{% endif %}">
+        <i class="fas fa-minus-circle"></i>Deduct User Balance
+      </a>
+      <a href="{% url 'admin_manage_funds' %}?type=add_referral" class="admin-link {% if selected_type == 'add_referral' %}active{% endif %}">
+        <i class="fas fa-hand-holding-dollar"></i>Add Referral Bonus
+      </a>
+      <a href="{% url 'admin_manage_funds' %}?type=deduct_referral" class="admin-link {% if selected_type == 'deduct_referral' %}active{% endif %}">
+        <i class="fas fa-handshake-slash"></i>Deduct Referral Bonus
+      </a>
+    </div>
+  </div>
+
+  <div class="glass rounded-3xl p-6 border border-white/5">
+    <h2 class="font-display text-lg font-bold text-white mb-4">
+      {% if selected_type == 'deduct_balance' %}Deduct User Balance{% elif selected_type == 'add_referral' %}Add Referral Bonus{% elif selected_type == 'deduct_referral' %}Deduct Referral Bonus{% else %}Add User Balance{% endif %}
+    </h2>
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
+      <input type="hidden" name="adjustment_type" value="{{ selected_type }}">
+      <div>
+        <label class="text-slate-400 text-xs uppercase tracking-wider mb-1.5 block font-medium">Select User</label>
+        <select name="user" required class="w-full px-4 py-3 rounded-xl text-white focus:outline-none" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">
+          <option value="">-- Select User --</option>
+          {% for u in users %}
+          <option value="{{ u.id }}" {% if selected_user and selected_user.id == u.id %}selected{% endif %}>
+            {{ u.username }} – {{ u.email }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      {% if selected_user %}
+      <div class="grid gap-4 lg:grid-cols-2">
+        <div class="p-4 rounded-2xl bg-slate-950/60 border border-white/5">
+          <div class="text-slate-400 text-xs uppercase tracking-wider mb-2">User Balance</div>
+          <div class="text-white text-2xl font-semibold">${{ selected_user.current_balance|floatformat:2 }}</div>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-950/60 border border-white/5">
+          <div class="text-slate-400 text-xs uppercase tracking-wider mb-2">Referral Balance</div>
+          <div class="text-white text-2xl font-semibold">${{ selected_user_referral_balance|floatformat:2 }}</div>
+        </div>
+      </div>
+      {% endif %}
+      <div>
+        <label class="text-slate-400 text-xs uppercase tracking-wider mb-1.5 block font-medium">Amount (USD)</label>
+        <input type="number" name="amount" step="0.01" min="0.01" required placeholder="e.g. 100"
+          class="w-full px-4 py-3 rounded-xl text-white focus:outline-none placeholder-slate-600"
+          style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">
+      </div>
+      <div>
+        <label class="text-slate-400 text-xs uppercase tracking-wider mb-1.5 block font-medium">Note</label>
+        <input type="text" name="note" placeholder="Optional note for this adjustment"
+          class="w-full px-4 py-3 rounded-xl text-white focus:outline-none placeholder-slate-600"
+          style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);">
+      </div>
+      <button type="submit" class="btn-green w-full py-3.5 rounded-xl font-bold text-sm">
+        {% if selected_type == 'deduct_balance' %}Deduct Balance{% elif selected_type == 'add_referral' %}Add Referral Bonus{% elif selected_type == 'deduct_referral' %}Deduct Referral Bonus{% else %}Add Balance{% endif %}
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

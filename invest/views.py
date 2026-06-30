@@ -448,6 +448,89 @@ def add_funds(request):
         return redirect('admin_dashboard')
     return render(request, 'admins/add_funds.html', {'users': users})
 
+# ─── Admin manage funds ───────────────────────────────────────────────────────────
+@user_passes_test(is_admin)
+def admin_manage_funds(request):
+    users = User.objects.filter(is_staff=False).order_by('username')
+    selected_user = None
+    selected_type = request.GET.get('type', 'add_balance')
+    selected_user_id = request.GET.get('user')
+    selected_user_referral_balance = None
+
+    if selected_user_id:
+        selected_user = User.objects.filter(pk=selected_user_id, is_staff=False).first()
+        if selected_user:
+            selected_user_referral_balance = selected_user.transactions.filter(transaction_type='REFERRAL', status='COMPLETED').aggregate(total=Sum('amount'))['total'] or Decimal('0')
+
+    if request.method == 'POST':
+        user_id = request.POST.get('user')
+        adjustment_type = request.POST.get('adjustment_type')
+        amount_raw = request.POST.get('amount')
+        note = request.POST.get('note', '').strip()
+
+        if not user_id:
+            messages.error(request, 'Please select a user.')
+            return redirect('admin_manage_funds')
+        try:
+            amount = Decimal(amount_raw)
+        except (TypeError, InvalidOperation):
+            messages.error(request, 'Invalid amount.')
+            return redirect('admin_manage_funds')
+        if amount <= 0:
+            messages.error(request, 'Amount must be greater than 0.')
+            return redirect('admin_manage_funds')
+
+        user = get_object_or_404(User, pk=user_id, is_staff=False)
+        try:
+            with transaction.atomic():
+                if adjustment_type == 'add_balance':
+                    Transaction.objects.create(
+                        user=user, transaction_type='DEPOSIT', amount=amount,
+                        status='APPROVED', processed_at=timezone.now(),
+                        processed_by=request.user, notes=note or 'Admin fund credit'
+                    )
+                elif adjustment_type == 'deduct_balance':
+                    if amount > user.current_balance:
+                        messages.error(request, 'Cannot deduct more than current user balance.')
+                        return redirect(f"{request.path}?user={user.id}&type={adjustment_type}")
+                    Transaction.objects.create(
+                        user=user, transaction_type='WITHDRAWAL', amount=amount,
+                        status='APPROVED', processed_at=timezone.now(),
+                        processed_by=request.user, notes=note or 'Admin fund deduction'
+                    )
+                elif adjustment_type == 'add_referral':
+                    Transaction.objects.create(
+                        user=user, transaction_type='REFERRAL', amount=amount,
+                        status='COMPLETED', processed_at=timezone.now(),
+                        processed_by=request.user, notes=note or 'Admin referral credit'
+                    )
+                elif adjustment_type == 'deduct_referral':
+                    referral_balance = user.transactions.filter(transaction_type='REFERRAL', status='COMPLETED').aggregate(total=Sum('amount'))['total'] or Decimal('0')
+                    if amount > referral_balance:
+                        messages.error(request, 'Cannot deduct more than current referral bonus balance.')
+                        return redirect(f"{request.path}?user={user.id}&type={adjustment_type}")
+                    Transaction.objects.create(
+                        user=user, transaction_type='REFERRAL', amount=-amount,
+                        status='COMPLETED', processed_at=timezone.now(),
+                        processed_by=request.user, notes=note or 'Admin referral deduction'
+                    )
+                else:
+                    messages.error(request, 'Invalid adjustment type.')
+                    return redirect('admin_manage_funds')
+
+                user.update_balances()
+            messages.success(request, 'Fund adjustment saved successfully.')
+        except Exception as e:
+            messages.error(request, f'Error: {e}')
+        return redirect('admin_manage_funds')
+
+    return render(request, 'admins/manage_funds.html', {
+        'users': users,
+        'selected_user': selected_user,
+        'selected_type': selected_type,
+        'selected_user_referral_balance': selected_user_referral_balance,
+    })
+
 # ─── Admin investments ────────────────────────────────────────────────────────────
 @user_passes_test(is_admin)
 def admin_investments(request):
@@ -560,6 +643,49 @@ def admin_users(request):
     users = User.objects.filter(is_staff=False).order_by('-date_joined')
     context = {'users': users, 'total_users': users.count()}
     return render(request, 'admins/users.html', context)
+
+# ─── Admin edit user details ─────────────────────────────────────────────────────
+@user_passes_test(is_admin)
+def admin_edit_user(request, user_id):
+    user_obj = get_object_or_404(User, pk=user_id, is_staff=False)
+
+    if request.method == 'POST':
+        username = (request.POST.get('username') or '').strip()
+        email = (request.POST.get('email') or '').strip()
+        first_name = (request.POST.get('first_name') or '').strip()
+        last_name = (request.POST.get('last_name') or '').strip()
+        phone = (request.POST.get('phone') or '').strip()
+        country = (request.POST.get('country') or '').strip()
+        password = request.POST.get('password', '').strip()
+
+        if not username or not email:
+            messages.error(request, 'Username and email are required.')
+            return redirect('admin_edit_user', user_id=user_obj.id)
+        if User.objects.filter(username=username).exclude(pk=user_obj.id).exists():
+            messages.error(request, 'Username already in use.')
+            return redirect('admin_edit_user', user_id=user_obj.id)
+        if User.objects.filter(email=email).exclude(pk=user_obj.id).exists():
+            messages.error(request, 'Email already in use.')
+            return redirect('admin_edit_user', user_id=user_obj.id)
+
+        user_obj.username = username
+        user_obj.email = email
+        user_obj.first_name = first_name
+        user_obj.last_name = last_name
+        user_obj.phone = phone
+        user_obj.country = country
+        if password:
+            user_obj.set_password(password)
+
+        try:
+            user_obj.save()
+            messages.success(request, 'User details updated successfully.')
+            return redirect('admin_users')
+        except Exception as e:
+            messages.error(request, f'Error saving user: {e}')
+            return redirect('admin_edit_user', user_id=user_obj.id)
+
+    return render(request, 'admins/edit_user.html', {'user_obj': user_obj})
 
 # ─── Admin investment plans (CREATE / EDIT / DELETE) ─────────────────────────────
 @user_passes_test(is_admin)

@@ -66,7 +66,10 @@
       <a href="{% url 'admin_users' %}" class="admin-link {% if request.resolver_match.url_name == 'admin_users' %}active{% endif %}">
         <i class="fas fa-users"></i>Users
       </a>
-      <a href="{% url 'add_funds' %}" class="admin-link {% if request.resolver_match.url_name == 'add_funds' %}active{% endif %}" style="color:#4ade80;">
+      <a href="{% url 'admin_manage_funds' %}" class="admin-link {% if request.resolver_match.url_name == 'admin_manage_funds' %}active{% endif %}" style="color:#4ade80;">
+        <i class="fas fa-wallet"></i>Manage Funds
+      </a>
+      <a href="{% url 'add_funds' %}" class="admin-link {% if request.resolver_match.url_name == 'add_funds' %}active{% endif %}">
         <i class="fas fa-plus-circle"></i>Add Funds
       </a>
       <a href="{% url 'admin_deposits' %}" class="admin-link {% if request.resolver_match.url_name == 'admin_deposits' %}active{% endif %}">

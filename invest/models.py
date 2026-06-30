@@ -87,6 +87,17 @@ class User(AbstractUser):
         ).aggregate(Sum('amount'))['amount__sum'] or Decimal('0')
         
         return profits + referral_bonuses
+
+    @property
+    def current_referral_balance(self):
+        """Calculate current referral bonus balance"""
+        from django.db.models import Sum
+        from decimal import Decimal
+
+        return self.transactions.filter(
+            transaction_type='REFERRAL', 
+            status='COMPLETED'
+        ).aggregate(Sum('amount'))['amount__sum'] or Decimal('0')
     
     @property
     def current_total_deposited(self):

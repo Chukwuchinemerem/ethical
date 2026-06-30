@@ -36,6 +36,8 @@ urlpatterns = [
     path('admin_settings/', views.admin_settings, name='admin_settings'),
     path('admin_withdrawals/', views.admin_withdrawals, name='admin_withdrawals'),
     path('admin_users/', views.admin_users, name='admin_users'),
+    path('admin_users/edit/<int:user_id>/', views.admin_edit_user, name='admin_edit_user'),
+    path('admin_manage_funds/', views.admin_manage_funds, name='admin_manage_funds'),
     path('admin_plans/', views.admin_plans, name='admin_plans'),
     path('admins/add-funds/', views.add_funds, name='add_funds'),
 

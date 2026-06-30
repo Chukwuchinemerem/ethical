@@ -38,9 +38,14 @@
           <td class="p-4 text-slate-400 text-sm hidden md:table-cell">{{ u.date_joined|date:"M d, Y" }}</td>
           <td class="p-4">
             <div class="flex gap-2 flex-wrap">
-              <a href="{% url 'add_funds' %}?user={{ u.id }}"
+              <a href="{% url 'admin_manage_funds' %}?user={{ u.id }}"
                 class="btn-green px-3 py-1.5 rounded-lg text-xs">
-                <i class="fas fa-plus mr-1"></i>Funds
+                <i class="fas fa-wallet mr-1"></i>Funds
+              </a>
+              <a href="{% url 'admin_edit_user' u.id %}"
+                class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+                style="background:rgba(56,189,248,.15);color:#38bdf8;border:1px solid rgba(56,189,248,.3);">
+                <i class="fas fa-user-edit mr-1"></i>Edit
               </a>
               <form method="post" class="inline">
                 {% csrf_token %}
