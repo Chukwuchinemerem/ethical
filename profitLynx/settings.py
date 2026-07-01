@@ -27,7 +27,7 @@ else:
     ALLOWED_HOSTS = [
         'localhost',
         '127.0.0.1',
-        'ethicalfinance.onrender.com',
+        'ethicalfinance-xg1c.onrender.com',
         'ethicalfinance.it.com',
         'www.ethicalfinance.it.com',
     ]
